@@ -1,0 +1,36 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate skill against the Agent Skills spec
+        run: |
+          pip install skills-ref==0.1.1
+          agentskills validate skills/ai-workflow-audit
+      - name: Validate Claude Code plugin and marketplace manifests
+        run: |
+          npm install -g @anthropic-ai/claude-code
+          claude plugin validate .claude-plugin/plugin.json
+          claude plugin validate .
+      - name: Release checks (versions, self-exclusion prefix, TODOs, internal references)
+        run: python3 scripts/check_release.py
+      - name: Guard hook tests (procedure commands allowed, writes and non-read-only commands blocked, project-mode isolation)
+        run: python3 scripts/test_guard.py
+      - name: Consolidated report parser tests (fixtures, aggregates, no per-person results)
+        run: python3 scripts/test_consolidation.py
+      - name: Visual report renderer tests (11 pages, escaping, matrix validation, no overwrite; PDF via the runner's Chrome)
+        run: python3 scripts/test_render.py

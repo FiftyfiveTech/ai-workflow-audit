@@ -1,0 +1,15 @@
+{
+  "name": "fiftyfivetech",
+  "owner": {
+    "name": "FiftyFive Technologies"
+  },
+  "description": "Tools from FiftyFive Technologies for auditing AI-assisted development workflows.",
+  "plugins": [
+    {
+      "name": "ai-workflow-audit",
+      "source": "./",
+      "description": "Read-only audit of a repository's AI-assisted development workflow, scored on 11 weighted parameters, with a consolidated report and a visual PDF for multi-repo projects.",
+      "version": "1.0.0"
+    }
+  ]
+}

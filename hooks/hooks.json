@@ -1,0 +1,17 @@
+{
+  "description": "ai-workflow-audit guard: enforces the read-only audit rules for the plugin's own ai-workflow-audit subagent only. Other tool calls pass through untouched.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Write|Edit|MultiEdit|NotebookEdit|Read|Grep|Glob",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/ai-workflow-audit-guard.py\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

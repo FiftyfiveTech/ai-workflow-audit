@@ -1,0 +1,20 @@
+{
+  "name": "ai-workflow-audit",
+  "version": "1.0.0",
+  "description": "Read-only audit of how effectively a repository uses AI coding agents. Scores 11 weighted parameters with cited evidence and writes one Markdown report per repo, plus a consolidated report and a visual PDF for multi-repo projects. Runs on a pinned model (Claude Opus 5.5, high effort).",
+  "author": {
+    "name": "FiftyFive Technologies"
+  },
+  "homepage": "https://github.com/FiftyfiveTech/ai-workflow-audit",
+  "repository": "https://github.com/FiftyfiveTech/ai-workflow-audit",
+  "license": "MIT",
+  "keywords": [
+    "audit",
+    "ai-agents",
+    "agents-md",
+    "mcp",
+    "security",
+    "governance",
+    "code-review"
+  ]
+}

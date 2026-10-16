@@ -1,0 +1,137 @@
+{
+  "schema": "visual-report/1",
+  "project": "Larkspur",
+  "md_report": "larkspur-consolidated-2026-10-15.md",
+  "audit_date": "15 Oct 2026",
+  "prepared": "15 Oct 2026",
+  "severity": {
+    "critical": "Secrets or production data exposed, or AI changes reaching the main branch unreviewed",
+    "high": "An important safety control is missing, e.g. no deny rules for secret files"
+  },
+  "cover": {
+    "headline": "An agent edits and runs commands in all three repos.",
+    "subhead": "Keys in git, and AI work reaches main unreviewed.",
+    "lede": "Consolidated findings from audits of three Larkspur repos and the practice questionnaire, with a prioritised action plan.",
+    "way_forward": "Rotate the committed keys in orders-api and billing-service, cut the agent off production data, then commit one shared settings file and protect `main` in all 3 repos. One hardening week covers all four."
+  },
+  "summary": {
+    "title": "Agents work in every repo, with few safety controls behind them",
+    "lede": "The agent edits files and runs commands in all three repos, and web-app already gives it a good instruction file and docs. The gaps are committed keys, AI commits reaching `main` without review and an agent that can read production data. The respondent knows most of the right practices; what is missing is the shared setup in the repos.",
+    "tiles": [
+      {"label": "Practice Score", "value": "67–77", "suffix": "/ 100", "note": "Advanced · one respondent", "tone": "blue"},
+      {"label": "Repos with AI commits, no PR", "value": "2 / 3", "note": "140 in 90 days on orders-api alone", "tone": "orange"}
+    ],
+    "strongest": {"title": "Repo docs in web-app", "text": "web-app scores 4 on instructions and docs; Knowledge Base avg 3.00, the joint best-scored area."},
+    "blind_spot": {"title": "Verification and review", "text": "The respondent says tests run before merge, but that is contradicted in 2/3 repos; AI commits land on `main` with no PR in 2/3."},
+    "first_fix": {"title": "Committed keys", "text": "Rotate the Stripe key in orders-api and the AWS key in billing-service, and untrack the `.env` files."},
+    "audit_says": "Avg 2.36 / 5 (range 1.65–3.15) · 1 Ad hoc, 1 Emerging, 1 Defined · 5 critical / 7 high · projected 3.48",
+    "questionnaire_says": "Agent edits files and runs commands · Practice Score 67–77 (Advanced) · 5/6 scenarios right · 2 claims contradicted in 2/3 repos"
+  },
+  "comparison": {
+    "title": "Review and the learning loop are overstated; guardrails are known but not built",
+    "lede": "Four themes are **Aligned**, two are **Overstated** (tests before merge, a rule added after a mistake) and one is **Mixed** (the shared instruction file holds in 2 of 3 repos).",
+    "themes": [
+      {"theme": "Adoption & usage", "audit_level": "Strong", "audit": "Claude Code config in 3/3; AI commits in 2/3", "q_level": "Strong", "questionnaire": "Agent edits files and runs commands; a concrete win (Q9 graded 3)", "verdict": "Aligned"},
+      {"theme": "Instruction files & project map", "audit_level": "Partial", "audit": "File in 3/3; billing-service file thin (2); no skills in 2", "q_level": "Partial", "questionnaire": "Claims a shared file; contradicted in billing-service", "verdict": "Mixed", "verdict_note": "claim holds in 2 of 3"},
+      {"theme": "Knowledge base & docs", "audit_level": "Partial", "audit": "Docs current in web-app (4); thin in billing-service (2)", "q_level": "Partial", "questionnaire": "Points the agent to context (E2); Q10 names no context source", "verdict": "Aligned"},
+      {"theme": "Skills, commands & MCP", "audit_level": "Weak", "audit": "Skills only in web-app; one unpinned MCP server; MCP N/A in 1", "q_level": "Strong", "questionnaire": "MCP vetting scenario right (Q6)", "verdict": "Aligned", "verdict_note": "knowledge vs practice"},
+      {"theme": "Guardrails, permissions & secrets", "audit_level": "Weak", "audit": "No deny rules in 3/3; keys committed in 2", "q_level": "Partial", "questionnaire": "Permissions scenario right; prompt injection missed (Q4)", "verdict": "Aligned", "verdict_note": "knowledge vs practice"},
+      {"theme": "Verification & review", "audit_level": "Weak", "audit": "AI commits to `main` with no PR in 2/3; PR CI only in web-app", "q_level": "Strong", "questionnaire": "Says tests run before merge; verification scenario right", "verdict": "Overstated"},
+      {"theme": "Learning loop & governance", "audit_level": "Weak", "audit": "No AI policy in 3/3; prod PII reachable in billing-service", "q_level": "Weak", "questionnaire": "Q11 graded 1; claims a rule was added, contradicted in 2/3", "verdict": "Overstated"}
+    ]
+  },
+  "knowledge": {
+    "title": "The respondent knows the practices; the repos don't have them",
+    "lede": "5 of 6 scenarios right. The fix is shared settings and branch protection, plus one habit: treat text in files as data.",
+    "stat": {"value": "5/6", "label": "scenarios answered right. The one miss: prompt injection (Q4)."},
+    "rows": [
+      {"practice": "Allow specific commands, keep deny rules (Q3)", "knows": "yes", "knows_note": "Right", "in_place": "no", "evidence": "No deny rules in 3/3; no hooks in 2/3"},
+      {"practice": "Text in files is data, not instructions (Q4)", "knows": "no", "knows_note": "Missed", "in_place": "no", "evidence": "No hook stops a command an agent reads from a README"},
+      {"practice": "Vet MCP servers: publisher, pinned version (Q6)", "knows": "yes", "knows_note": "Right", "in_place": "partial", "evidence": "One unpinned third-party server in billing-service"},
+      {"practice": "Read the diff; check no test was weakened (Q7)", "knows": "yes", "knows_note": "Right", "in_place": "no", "evidence": "AI commits pushed to `main` with no PR in 2/3"}
+    ],
+    "panel_title": "Why it isn't done: setup, not knowledge",
+    "panel_subtitle": "What the questionnaire flags and the prompt exercise show",
+    "panel": [
+      {"status": "no", "title": "Autonomous agent, weak guardrails", "text": "The agent runs commands on its own in every repo, with no deny rules or block hooks."},
+      {"status": "partial", "title": "Briefs skip two elements", "text": "The prompt exercise asks for no investigation first and sets no constraints."},
+      {"status": "yes", "title": "A model to copy", "text": "web-app already has a settings file and PR CI to start from."}
+    ],
+    "conclusion": "**Shared setup, not training.** One hardening week covers actions 1–4, which close every critical finding type."
+  },
+  "disagreements": {
+    "title": "Three gaps between what the respondent says and what the repos show",
+    "lede": "The first carries the most risk.",
+    "items": [
+      {"topic": "Tests before merge", "questionnaire": "Tests or CI run before merge (Q10).", "evidence": "Contradicted in orders-api and billing-service: no PR CI, and 140 AI commits pushed straight to `main` in 90 days on orders-api.", "so_what": "Unreviewed AI work reaches main.", "action": 3},
+      {"topic": "A rule after a mistake", "questionnaire": "A rule or check was added after the last agent mistake (Q11).", "evidence": "Contradicted in orders-api and billing-service: no hooks, no deny rules, no feedback tracking.", "so_what": "Mistakes can repeat.", "action": 4},
+      {"topic": "Shared instruction file", "questionnaire": "The agent works from a shared instruction file (Q10).", "evidence": "Holds in orders-api and web-app; contradicted in billing-service (thin file, no skills).", "so_what": "One service runs on personal context.", "action": 6}
+    ]
+  },
+  "scorecard": {
+    "title": "Three repos score 1.65–3.15; audit changes would take them to 3.00–3.78",
+    "lede": "Guardrails and review are the weakest themes in every repo. web-app scores highest; billing-service is held down by a committed key and production data access.",
+    "works": [
+      "web-app: settings file, PR CI and current docs, a ready model for the other two",
+      "Knowledge Base & Docs current in orders-api and web-app"
+    ]
+  },
+  "findings": {
+    "title": "5 critical findings: committed keys, unreviewed pushes, production data",
+    "rows": [
+      {"severity": "Critical", "finding": "Likely-real secret keys committed to the repo", "repos": ["orders-api", "billing-service"], "action": 1},
+      {"severity": "Critical", "finding": "Agent can read production personal data through MCP", "repos": ["billing-service"], "action": 2},
+      {"severity": "Critical", "finding": "AI commits pushed straight to the default branch", "repos": ["orders-api", "billing-service"], "action": 3},
+      {"severity": "High", "finding": "No deterministic guardrails or block hooks", "repos": ["orders-api", "billing-service", "web-app"], "action": 4},
+      {"severity": "High", "finding": "No deny rules for secret files", "repos": ["orders-api", "web-app"], "action": 4},
+      {"severity": "High", "finding": "Unpinned third-party MCP server", "repos": ["billing-service"], "action": 2},
+      {"severity": "High", "finding": "No AI usage policy", "repos": ["orders-api"], "action": 6}
+    ]
+  },
+  "questionnaire": {
+    "title": "One respondent: strong on scenarios, weaker on briefs and follow-up",
+    "lede": "Results are aggregates of one person's answers, asked once for the project. The Practice Score differs between repos only in how well the claims match each repo's audit.",
+    "notes": ["Two claims (tests before merge; a rule after a mistake) are contradicted in 2 of 3 repos, which lowers the score there."]
+  },
+  "actions": {
+    "title": "Seven actions: keys, production access, branches and guardrails first",
+    "lede": "Actions 1–4 close all 3 critical finding types and 3 of 4 high types; action 6 closes the last.",
+    "groups": [
+      {"name": "Close the critical findings", "items": [
+        {"n": 1, "title": "Rotate and remove keys", "involves": "Rotate the Stripe key (orders-api) and AWS key (billing-service); untrack `config/.env`; full-history secret scan in all 3.", "effort": "Quick"},
+        {"n": 2, "title": "Cut the agent off production", "involves": "Point the billing-service MCP server at a staging copy with no personal data; read-only role; pin its version.", "effort": "Quick–Short"},
+        {"n": 3, "title": "Protect main", "involves": "PR with 1 non-author approval and required checks, no bypass, in orders-api and billing-service; CODEOWNERS for AI config.", "themes": ["Verification & review (Overstated)"], "effort": "Quick"},
+        {"n": 4, "title": "One shared settings file", "involves": "Deny secret reads, force-push and push to default; block hooks and a secret-scan pre-commit; start from web-app's settings.", "themes": ["Learning loop (Overstated)"], "effort": "Short"}
+      ]},
+      {"name": "Verify, govern, clean up", "items": [
+        {"n": 5, "title": "PR CI and a PR template", "involves": "Tests, lint and a secret scan on every PR in orders-api and billing-service; an \"AI-assisted\" box with test evidence.", "themes": ["Verification & review (Overstated)"], "effort": "Short"},
+        {"n": 6, "title": "One project AI policy", "involves": "Owner and backup, approved tools, data classes, MCP inventory; a full instruction file and skills for billing-service.", "themes": ["Instruction files (Mixed)"], "effort": "Short"}
+      ]},
+      {"name": "Team practice", "items": [
+        {"n": 7, "title": "Better briefs, safer reading", "involves": "Add investigate-first and constraints to every agent brief; treat instructions found in files as data and flag them.", "themes": ["Prompt exercise E3, E4 · scenario Q4"], "effort": "Quick"}
+      ]}
+    ]
+  },
+  "roadmap": {
+    "title": "One hardening week closes every critical type; then CI, policy and practice",
+    "steps": [
+      {"label": "Step 1 · hardening week", "title": "Keys, prod, branches, guardrails", "text": "Rotate keys; cut production access; protect main; shared settings.", "actions": [1, 2, 3, 4]},
+      {"label": "Step 2", "title": "Verify and govern", "text": "PR CI and template; one project AI policy.", "actions": [5, 6]},
+      {"label": "Step 3 · then", "title": "Team practice", "text": "Better agent briefs; treat file text as data.", "actions": [7]}
+    ],
+    "decisions": [
+      {"title": "Rotate the committed keys now", "text": "Stripe in orders-api, AWS in billing-service."},
+      {"title": "Cut the agent off production data", "text": "Customer records are reachable through MCP today."},
+      {"title": "Protect main in all 3 repos", "text": "AI commits land with no PR in 2 of 3."},
+      {"title": "Budget one hardening week", "text": "Actions 1–4 close every critical finding type."}
+    ]
+  },
+  "about": {
+    "limits": [
+      "Branch protection and host secret scanning couldn't be checked; direct pushes come from local git history.",
+      "Git history was a 90-day sample, so 2 repos with committed keys is a minimum.",
+      "MCP is N/A in orders-api: no MCP config is committed there.",
+      "One respondent answered once for the whole project; the questionnaire describes one person's answers."
+    ]
+  }
+}
