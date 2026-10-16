@@ -75,11 +75,17 @@ npx skills add FiftyfiveTech/ai-workflow-audit -g -a codex   # one agent
 gh skill install FiftyfiveTech/ai-workflow-audit ai-workflow-audit --scope user
 ```
 
-**Claude Code plugin (model pinned automatically):**
+**Claude Code plugin (model pinned automatically).** Install it from your terminal:
+```sh
+claude plugin marketplace add FiftyfiveTech/ai-workflow-audit
+claude plugin install ai-workflow-audit@fiftyfivetech
+```
+Or from inside a Claude Code session:
 ```
 /plugin marketplace add FiftyfiveTech/ai-workflow-audit
 /plugin install ai-workflow-audit@fiftyfivetech
 ```
+Both install the plugin for your user (scope `user`), so it is available in every project. Restart any Claude Code session that is already open so that it loads the plugin.
 
 **Optional model pinning for other agents.** Install the skill as above, then copy the matching agent file:
 
