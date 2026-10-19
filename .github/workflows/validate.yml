@@ -32,5 +32,7 @@ jobs:
         run: python3 scripts/test_guard.py
       - name: Consolidated report parser tests (fixtures, aggregates, no per-person results)
         run: python3 scripts/test_consolidation.py
+      - name: Let Chrome start its sandbox (Ubuntu 24.04 blocks unprivileged user namespaces by default)
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Visual report renderer tests (11 pages, escaping, matrix validation, no overwrite; PDF via the runner's Chrome)
         run: python3 scripts/test_render.py

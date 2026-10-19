@@ -917,7 +917,9 @@ def print_pdf(browser, html_path, out):
         except (OSError, subprocess.TimeoutExpired) as e:
             return f"browser failed: {e}"
     if not os.path.isfile(out):
-        return "browser failed: " + (r.stderr.strip().splitlines() or ["no PDF written"])[-1][:300]
+        lines = r.stderr.strip().splitlines()
+        fatal = [ln for ln in lines if "FATAL" in ln or "ERROR" in ln]
+        return "browser failed: " + (fatal or lines or ["no PDF written"])[0 if fatal else -1][:300]
     with open(out, "rb") as fh:
         if fh.read(5) != b"%PDF-":
             os.remove(out)
